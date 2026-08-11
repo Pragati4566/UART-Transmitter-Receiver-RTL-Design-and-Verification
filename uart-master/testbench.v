@@ -42,33 +42,49 @@ module testbench;
     );
 
 
+    // Clock generation
     always #5 clk = ~clk;
 
 
     initial begin
 
-        $dumpfile("uart_waveform.vcd");
+        // Create waveform file
+        $dumpfile("dump.vcd");
         $dumpvars(0, testbench);
 
+
+        // Initial values
         clk = 1'b0;
         rst = 1'b1;
         tx_start = 1'b0;
         tx_data = 8'b00000000;
 
+
+        // Release reset
         #20;
         rst = 1'b0;
 
+
+        // Give data to transmitter
         tx_data = 8'b10101010;
+
+        // Start transmission
         tx_start = 1'b1;
 
         #10;
         tx_start = 1'b0;
 
+
+        // Wait for transmission and reception
         #1000;
 
+
+        // Display results
         $display("Transmitted Data = %b", tx_data);
         $display("Received Data    = %b", rx_data);
 
+
+        // End simulation
         $finish;
 
     end
