@@ -21,20 +21,100 @@ using simulation waveforms.
 ## Architecture
 
 ```text
-                Parallel Data
-                      |
-                      v
-                +-----------+
-                |  UART TX  |
-                | RTL Module|
-                +-----+-----+
-                      |
-                      | Serial Data
-                      v
-                +-----------+
-                |  UART RX  |
-                | RTL Module|
-                +-----+-----+
-                      |
-                      v
-                Received Data
+                                    UART TRANSMITTER–RECEIVER
+                         RTL DESIGN
+                              │
+                              │
+                  ┌───────────▼───────────┐
+                  │       INPUT DATA      │
+                  │                       │
+                  │  TX Data [7:0]        │
+                  │  TX Start             │
+                  │  Reset                │
+                  └───────────┬───────────┘
+                              │
+                              ▼
+                ┌─────────────────────────┐
+                │    UART TRANSMITTER     │
+                │                         │
+                │      Verilog RTL        │
+                │                         │
+                │  • Data Register        │
+                │  • State Machine        │
+                │  • Bit Counter          │
+                │  • Baud Counter         │
+                └────────────┬────────────┘
+                             │
+                             │ Serial TX Line
+                             │
+                             ▼
+                 ┌────────────────────────┐
+                 │      UART RECEIVER     │
+                 │                        │
+                 │       Verilog RTL      │
+                 │                        │
+                 │  • Start Detection     │
+                 │  • Data Sampling       │
+                 │  • Bit Counter         │
+                 │  • State Machine       │
+                 └────────────┬───────────┘
+                              │
+                              ▼
+                   ┌─────────────────────┐
+                   │     OUTPUT DATA     │
+                   │                     │
+                   │  RX Data [7:0]      │
+                   │  RX Valid           │
+                   └─────────────────────┘
+
+
+         CONFIGURATION / TIMING
+         ──────────────────────
+
+              ┌──────────────────────┐
+              │   UART PARAMETERS    │
+              │                      │
+              │  DATA_WIDTH = 8      │
+              │  BAUD_RATE           │
+              │  CLK_FREQ_HZ         │
+              └──────────┬───────────┘
+                         │
+                         ▼
+              ┌──────────────────────┐
+              │   BAUD CALCULATION   │
+              │                      │
+              │   CLKS_PER_BIT       │
+              └──────────┬───────────┘
+                         │
+                  Controls TX/RX
+                     bit timing
+
+
+              VERIFICATION FLOW
+              ────────────────
+
+       ┌──────────────────────┐
+       │     TESTBENCH.V      │
+       │                      │
+       │ • Generates Clock    │
+       │ • Applies Reset      │
+       │ • Sends Test Data    │
+       │ • Starts TX          │
+       │ • Observes RX        │
+       └──────────┬───────────┘
+                  │
+                  ▼
+       ┌──────────────────────┐
+       │     SIMULATION       │
+       │                      │
+       │       VeriSim        │
+       └──────────┬───────────┘
+                  │
+                  ▼
+       ┌──────────────────────┐
+       │   WAVEFORM ANALYSIS  │
+       │                      │
+       │  TX → Serial Data    │
+       │  RX → Received Data  │
+       │  RX_VALID            │
+       └──────────────────────┘
