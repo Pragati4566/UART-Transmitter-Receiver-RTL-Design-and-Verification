@@ -1,3 +1,4 @@
+// 1 to 12
 module uart_tx #(
     parameter DATA_WIDTH = 8,
     parameter CLK_FREQ_HZ = 1000000,
@@ -9,7 +10,7 @@ module uart_tx #(
     input [DATA_WIDTH-1:0] tx_data,
     output reg tx
 );
-
+//13 to 25
     localparam integer CLKS_PER_BIT = CLK_FREQ_HZ / BAUD_RATE;
 
     localparam IDLE  = 2'b00;
@@ -32,7 +33,7 @@ module uart_tx #(
             baud_count <= 0;
             tx         <= 1'b1;
         end
-
+//36 to 50
         else begin
 
             case (state)
@@ -47,7 +48,7 @@ module uart_tx #(
                         state    <= START;
                     end
                 end
-
+//51 to 62 
                 START: begin
                     tx <= 1'b0;
 
@@ -78,7 +79,7 @@ module uart_tx #(
                         baud_count <= baud_count + 1;
                     end
                 end
-
+//82 to 90
                 STOP: begin
                     tx <= 1'b1;
 
@@ -90,7 +91,7 @@ module uart_tx #(
                         baud_count <= baud_count + 1;
                     end
                 end
-
+// 94 to 104
                 default: begin
                     state <= IDLE;
                 end
@@ -101,7 +102,7 @@ module uart_tx #(
 
 endmodule
 
-
+//105 to 120
 module uart_rx #(
     parameter DATA_WIDTH = 8,
     parameter CLK_FREQ_HZ = 1000000,
