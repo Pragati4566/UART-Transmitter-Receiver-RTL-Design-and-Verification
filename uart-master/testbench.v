@@ -1,3 +1,4 @@
+//line number 2 to 18
 module testbench;
 
     parameter DATA_WIDTH = 8;
@@ -15,7 +16,7 @@ module testbench;
     wire [DATA_WIDTH-1:0] rx_data;
     wire rx_valid;
 
-
+//line number 19 to 31
     uart_tx #(
         .DATA_WIDTH(DATA_WIDTH),
         .CLK_FREQ_HZ(CLK_FREQ_HZ),
@@ -28,7 +29,7 @@ module testbench;
         .tx(tx_line)
     );
 
-
+//line number 32 to 44
     uart_rx #(
         .DATA_WIDTH(DATA_WIDTH),
         .CLK_FREQ_HZ(CLK_FREQ_HZ),
@@ -41,7 +42,7 @@ module testbench;
         .rx_valid(rx_valid)
     );
 
-
+//line number 45 to 61
     // Clock generation
     always #5 clk = ~clk;
 
@@ -58,8 +59,8 @@ module testbench;
         rst = 1'b1;
         tx_start = 1'b0;
         tx_data = 8'b00000000;
-
-
+ 
+//line number 63 to 81
         // Release reset
         #20;
         rst = 1'b0;
@@ -78,7 +79,7 @@ module testbench;
         // Wait for transmission and reception
         #1000;
 
-
+//line number 82 to 93
         // Display results
         $display("Transmitted Data = %b", tx_data);
         $display("Received Data    = %b", rx_data);
