@@ -1,4 +1,4 @@
-// 1 to 12
+// line from 1 to 12
 module uart_tx #(
     parameter DATA_WIDTH = 8,
     parameter CLK_FREQ_HZ = 1000000,
@@ -10,7 +10,7 @@ module uart_tx #(
     input [DATA_WIDTH-1:0] tx_data,
     output reg tx
 );
-//13 to 25
+// line from 13 to 25
     localparam integer CLKS_PER_BIT = CLK_FREQ_HZ / BAUD_RATE;
 
     localparam IDLE  = 2'b00;
@@ -23,7 +23,7 @@ module uart_tx #(
 
     integer bit_count;
     integer baud_count;
-
+//line from 26 to 35
     always @(posedge clk or posedge rst) begin
 
         if (rst) begin
@@ -33,7 +33,7 @@ module uart_tx #(
             baud_count <= 0;
             tx         <= 1'b1;
         end
-//36 to 50
+// line from 36 to 50
         else begin
 
             case (state)
@@ -48,7 +48,7 @@ module uart_tx #(
                         state    <= START;
                     end
                 end
-//51 to 62 
+//line from 51 to 62
                 START: begin
                     tx <= 1'b0;
 
@@ -60,7 +60,7 @@ module uart_tx #(
                         baud_count <= baud_count + 1;
                     end
                 end
-
+//line from 63 to 81
                 DATA: begin
                     tx <= data_reg[bit_count];
 
@@ -79,7 +79,7 @@ module uart_tx #(
                         baud_count <= baud_count + 1;
                     end
                 end
-//82 to 90
+//line from 82 to 93
                 STOP: begin
                     tx <= 1'b1;
 
@@ -91,7 +91,7 @@ module uart_tx #(
                         baud_count <= baud_count + 1;
                     end
                 end
-// 94 to 104
+// line from 94 to 104
                 default: begin
                     state <= IDLE;
                 end
@@ -102,7 +102,7 @@ module uart_tx #(
 
 endmodule
 
-//105 to 120
+//line from 105 to 117
 module uart_rx #(
     parameter DATA_WIDTH = 8,
     parameter CLK_FREQ_HZ = 1000000,
@@ -114,7 +114,7 @@ module uart_rx #(
     output reg [DATA_WIDTH-1:0] rx_data,
     output reg rx_valid
 );
-
+   //line from 117 to 130
     localparam integer CLKS_PER_BIT = CLK_FREQ_HZ / BAUD_RATE;
     localparam integer HALF_BIT = CLKS_PER_BIT / 2;
 
@@ -128,7 +128,7 @@ module uart_rx #(
 
     integer bit_count;
     integer baud_count;
-
+//line from 131 to 143
     always @(posedge clk or posedge rst) begin
 
         if (rst) begin
@@ -139,9 +139,8 @@ module uart_rx #(
             bit_count  <= 0;
             baud_count <= 0;
         end
-
+//line from 142 to 155
         else begin
-
             rx_valid <= 1'b0;
 
             case (state)
@@ -154,7 +153,7 @@ module uart_rx #(
                         state <= START;
                     end
                 end
-
+//line from 156 to 172
                 START: begin
 
                     if (baud_count == HALF_BIT-1) begin
@@ -171,7 +170,7 @@ module uart_rx #(
                         baud_count <= baud_count + 1;
                     end
                 end
-
+//line from 173 to 192
                 DATA: begin
 
                     if (baud_count == CLKS_PER_BIT-1) begin
@@ -191,7 +190,7 @@ module uart_rx #(
                         baud_count <= baud_count + 1;
                     end
                 end
-
+//line from 193 to 216
                 STOP: begin
 
                     if (baud_count == CLKS_PER_BIT-1) begin
